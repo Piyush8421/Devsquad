@@ -1,6 +1,6 @@
-export const translations = {
-  en: {
+export const translations = {  en: {
     // Navigation
+    home: "Home",
     explore: "Explore",
     becomeHost: "Become a Host",
     help: "Help",
@@ -172,9 +172,9 @@ export const translations = {
     uniqueSpace: "Unique space",
     bedAndBreakfast: "Bed & breakfast",
     boutique: "Boutique hotel",
-  },
-  np: {
+  },  np: {
     // Navigation
+    home: "घर पृष्ठ",
     explore: "अन्वेषण गर्नुहोस्",
     becomeHost: "होस्ट बन्नुहोस्",
     help: "सहायता",

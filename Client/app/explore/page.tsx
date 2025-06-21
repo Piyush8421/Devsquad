@@ -154,9 +154,46 @@ export default function ExplorePage() {
       </div>
     )
   }
-
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Navigation */}
+      <nav className="sticky top-0 z-50 bg-white border-b border-gray-100">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo - clickable to go home */}
+            <Link href="/" className="text-2xl font-bold text-gray-900 hover:text-purple-600 transition-colors">
+              Kostra
+            </Link>
+
+            {/* Navigation Links */}
+            <div className="hidden md:flex items-center space-x-8">
+              <Link href="/" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
+                {t("home") || "Home"}
+              </Link>
+              <Link href="/explore" className="text-purple-600 font-medium">
+                {t("explore") || "Explore"}
+              </Link>
+              <Link href="/host" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
+                {t("becomeHost") || "Become a Host"}
+              </Link>
+              <Link href="/help" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
+                {t("help") || "Help"}
+              </Link>
+            </div>
+
+            {/* Mobile Home Button */}
+            <div className="md:hidden">
+              <Link href="/">
+                <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900">
+                  <Home className="w-4 h-4 mr-2" />
+                  Home
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </nav>
+
       {/* Header */}
       <div className="bg-white border-b">
         <div className="container mx-auto px-4 py-6">
