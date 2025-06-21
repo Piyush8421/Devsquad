@@ -119,11 +119,8 @@ export const translations = {  en: {
     step3Desc: "Choose how you'll communicate with guests and set house rules.",
     startHosting: "Start Hosting",
     estimatedEarnings: "Estimated monthly earnings",
-    calculate: "Calculate",
-    location: "Location",
+    calculate: "Calculate",    location: "Location",
     propertyTypeLabel: "Property type",
-    bedrooms: "Bedrooms",
-    bathrooms: "Bathrooms",
     nightsPerMonth: "Nights per month",
 
     // Help Page
@@ -163,11 +160,7 @@ export const translations = {  en: {
     stepOf: "Step {current} of {total}",
     next: "Next",
     back: "Back",
-    finish: "Finish",
-
-    // Property Types
-    apartment: "Apartment",
-    house: "House",
+    finish: "Finish",    // Property Types
     secondaryUnit: "Secondary unit",
     uniqueSpace: "Unique space",
     bedAndBreakfast: "Bed & breakfast",
@@ -293,10 +286,7 @@ export const translations = {  en: {
     startHosting: "होस्टिङ सुरु गर्नुहोस्",
     estimatedEarnings: "अनुमानित मासिक आम्दानी",
     calculate: "गणना गर्नुहोस्",
-    location: "स्थान",
-    propertyTypeLabel: "सम्पत्तिको प्रकार",
-    bedrooms: "शयनकक्षहरू",
-    bathrooms: "बाथरूमहरू",
+    location: "स्थान",    propertyTypeLabel: "सम्पत्तिको प्रकार",
     nightsPerMonth: "महिनामा रातहरू",
 
     // Help Page
@@ -336,11 +326,7 @@ export const translations = {  en: {
     stepOf: "चरण {current} को {total}",
     next: "अर्को",
     back: "फिर्ता",
-    finish: "समाप्त",
-
-    // Property Types
-    apartment: "अपार्टमेन्ट",
-    house: "घर",
+    finish: "समाप्त",    // Property Types
     secondaryUnit: "द्वितीयक एकाइ",
     uniqueSpace: "अनौठो ठाउँ",
     bedAndBreakfast: "बेड र ब्रेकफास्ट",
