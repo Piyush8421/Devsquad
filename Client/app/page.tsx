@@ -28,7 +28,7 @@ interface Property {
 
 export default function KostraHomepage() {
   const { language, setLanguage, t } = useLanguage()
-  const { user, logout } = useAuth()
+  const { user, logout, loading: authLoading } = useAuth()
   const [featuredProperties, setFeaturedProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
@@ -77,9 +77,7 @@ export default function KostraHomepage() {
               <Link href="/help" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
                 {t("help")}
               </Link>
-            </div>
-
-            {/* User Menu */}
+            </div>            {/* User Menu */}
             <div className="flex items-center space-x-4">
               {/* Language Toggle */}
               <DropdownMenu>
@@ -93,13 +91,64 @@ export default function KostraHomepage() {
                   <DropdownMenuItem onClick={() => setLanguage("en")}>English</DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setLanguage("np")}>नेपाली</DropdownMenuItem>
                 </DropdownMenuContent>
-              </DropdownMenu>
-
-              <Link href="/host/start">
-                <Button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-full">
-                  Get started
-                </Button>
-              </Link>
+              </DropdownMenu>              {/* Conditional rendering based on user authentication */}
+              {authLoading ? (
+                <div className="w-8 h-8">
+                  <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+                </div>
+              ) : user ? (
+                <div className="flex items-center space-x-4">
+                  <span className="text-gray-700 font-medium">
+                    {language === "np" ? `नमस्कार, ${user.firstName}` : `Hello, ${user.firstName}`}
+                  </span>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="flex items-center space-x-2">
+                        <div className="w-8 h-8 bg-purple-600 text-white rounded-full flex items-center justify-center">
+                          {user.firstName.charAt(0).toUpperCase()}
+                        </div>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-56">
+                      <div className="px-3 py-2 border-b">
+                        <p className="font-medium">{user.firstName} {user.lastName}</p>
+                        <p className="text-sm text-gray-500">{user.email}</p>
+                      </div>
+                      <DropdownMenuItem asChild>
+                        <Link href="/host">
+                          {language === "np" ? "होस्ट डाशबोर्ड" : "Host Dashboard"}
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/explore">
+                          {language === "np" ? "अन्वेषण गर्नुहोस्" : "Explore Properties"}
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/help">
+                          {language === "np" ? "सहायता" : "Help"}
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={logout} className="text-red-600">
+                        {language === "np" ? "लगआउट" : "Logout"}
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <Link href="/auth?mode=signin">
+                    <Button variant="ghost" className="text-gray-600 hover:text-gray-900">
+                      {language === "np" ? "लगिन" : "Login"}
+                    </Button>
+                  </Link>
+                  <Link href="/host/start">
+                    <Button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-full">
+                      {language === "np" ? "सुरु गर्नुहोस्" : "Get started"}
+                    </Button>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>
