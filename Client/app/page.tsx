@@ -170,18 +170,20 @@ export default function KostraHomepage() {
                 {language === "np"
                   ? "हजारौं प्रमाणित सम्पत्तिहरूबाट आफ्नो सपनाको बासस्थान फेला पार्नुहोस्"
                   : "Find your dream accommodation from thousands of verified properties"}
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4 mb-12">
-                <Button className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-full">
-                  {language === "np" ? "थप पत्ता लगाउनुहोस्" : "Discover more"}
-                </Button>
-                <Button
-                  variant="outline"
-                  className="border-purple-600 text-purple-600 hover:bg-purple-50 px-8 py-3 rounded-full"
-                >
-                  {language === "np" ? "सम्झौताहरू अन्वेषण गर्नुहोस्" : "Explore deals"}
-                </Button>
+              </p>              <div className="flex flex-col sm:flex-row gap-4 mb-12">
+                <Link href="/explore">
+                  <Button className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-full">
+                    {language === "np" ? "थप पत्ता लगाउनुहोस्" : "Discover more"}
+                  </Button>
+                </Link>
+                <Link href="/explore">
+                  <Button
+                    variant="outline"
+                    className="border-purple-600 text-purple-600 hover:bg-purple-50 px-8 py-3 rounded-full"
+                  >
+                    {language === "np" ? "सम्झौताहरू अन्वेषण गर्नुहोस्" : "Explore deals"}
+                  </Button>
+                </Link>
               </div>
 
               {/* Stats */}

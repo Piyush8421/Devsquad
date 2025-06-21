@@ -52,11 +52,20 @@ export default function MakeItStandOutPage() {
     { id: "gym", label: "Gym", icon: Dumbbell },
     { id: "breakfast", label: "Breakfast", icon: Coffee },
   ]
-
   const handleNext = () => {
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1)
     } else {
+      // Save all setup data to localStorage before moving to next page
+      const setupData = {
+        photos,
+        title,
+        description,
+        selectedAmenities,
+        pricing,
+        timestamp: Date.now()
+      }
+      localStorage.setItem('kostra_host_setup', JSON.stringify(setupData))
       window.location.href = "/host/setup/ready"
     }
   }
@@ -68,17 +77,58 @@ export default function MakeItStandOutPage() {
       window.location.href = "/host/setup/place"
     }
   }
-
   const handleAmenityToggle = (amenityId: string) => {
     setSelectedAmenities((prev) =>
       prev.includes(amenityId) ? prev.filter((id) => id !== amenityId) : [...prev, amenityId],
     )
   }
-
   const handlePhotoUpload = () => {
-    // Simulate photo upload
-    const newPhoto = `/placeholder.svg?height=200&width=300&text=Photo${photos.length + 1}`
-    setPhotos([...photos, newPhoto])
+    // Create a hidden file input element
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = 'image/jpeg,image/jpg,image/png,image/webp'
+    input.multiple = true
+    input.style.display = 'none'
+    
+    input.onchange = (event) => {
+      const files = (event.target as HTMLInputElement).files
+      if (files) {
+        const remainingSlots = 5 - photos.length
+        const validFiles = Array.from(files).filter(file => {
+          const isValidType = file.type.startsWith('image/')
+          const isValidSize = file.size <= 10 * 1024 * 1024 // 10MB limit
+          
+          if (!isValidType) {
+            alert(`${file.name} is not a valid image file.`)
+            return false
+          }
+          if (!isValidSize) {
+            alert(`${file.name} is too large. Please choose files under 10MB.`)
+            return false
+          }
+          return true
+        })
+        
+        const filesToProcess = validFiles.slice(0, remainingSlots)
+        
+        filesToProcess.forEach((file) => {
+          const reader = new FileReader()
+          reader.onload = (e) => {
+            const result = e.target?.result as string
+            setPhotos(prev => [...prev, result])
+          }
+          reader.readAsDataURL(file)
+        })
+        
+        // Show a message if user tried to upload more than allowed
+        if (validFiles.length > remainingSlots) {
+          alert(`You can only add ${remainingSlots} more photo(s). Only the first ${remainingSlots} photo(s) were added.`)
+        }
+      }
+    }
+    
+    // Trigger the file picker
+    input.click()
   }
 
   const removePhoto = (index: number) => {
@@ -117,15 +167,16 @@ export default function MakeItStandOutPage() {
                           <X className="w-4 h-4" />
                         </Button>
                       </div>
-                    ))}
-                    {photos.length < 5 && (
+                    ))}                    {photos.length < 5 && (
                       <div
-                        className="border-2 border-dashed border-gray-300 rounded-lg h-48 flex items-center justify-center cursor-pointer hover:border-purple-400 transition-colors"
+                        className="border-2 border-dashed border-gray-300 rounded-lg h-48 flex items-center justify-center cursor-pointer hover:border-purple-400 hover:bg-purple-50 transition-all"
                         onClick={handlePhotoUpload}
                       >
                         <div className="text-center">
                           <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                          <p className="text-gray-600">Add photo</p>
+                          <p className="text-gray-600 font-medium">Add photos</p>
+                          <p className="text-gray-400 text-sm">Click to browse files</p>
+                          <p className="text-gray-400 text-xs mt-1">JPG, PNG, JPEG accepted</p>
                         </div>
                       </div>
                     )}

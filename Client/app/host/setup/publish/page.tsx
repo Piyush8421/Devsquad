@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { CheckCircle, Star, Calendar, DollarSign, Users, ArrowRight } from "lucide-react"
@@ -8,10 +8,44 @@ import Link from "next/link"
 import Image from "next/image"
 import { useLanguage } from "@/contexts/language-context"
 
+interface SetupData {
+  photos: string[]
+  title: string
+  description: string
+  selectedAmenities: string[]
+  pricing: {
+    basePrice: string
+    cleaningFee: string
+    securityDeposit: string
+  }
+  timestamp: number
+}
+
 export default function PublishListingPage() {
   const { t } = useLanguage()
   const [isPublishing, setIsPublishing] = useState(false)
   const [isPublished, setIsPublished] = useState(false)
+  const [setupData, setSetupData] = useState<SetupData | null>(null)
+
+  useEffect(() => {
+    // Load setup data from localStorage
+    const savedData = localStorage.getItem('kostra_host_setup')
+    if (savedData) {
+      try {
+        const data = JSON.parse(savedData) as SetupData
+        setSetupData(data)
+      } catch (error) {
+        console.error('Error parsing setup data:', error)
+      }
+    }
+  }, [])
+
+  const calculateTotalPrice = () => {
+    if (!setupData?.pricing) return 0
+    const basePrice = Number(setupData.pricing.basePrice) || 0
+    const cleaningFee = Number(setupData.pricing.cleaningFee) || 0
+    return basePrice + cleaningFee
+  }
 
   const handlePublish = async () => {
     setIsPublishing(true)
@@ -62,7 +96,6 @@ export default function PublishListingPage() {
       </div>
     )
   }
-
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
@@ -83,13 +116,23 @@ export default function PublishListingPage() {
           <p className="text-xl text-gray-600">Here's what we'll show to guests. Make sure everything looks good!</p>
         </div>
 
+        {!setupData ? (
+          <div className="text-center py-12">
+            <p className="text-gray-600 mb-4">No setup data found. Please complete the previous steps first.</p>
+            <Link href="/host/setup/standout">
+              <Button className="bg-purple-600 hover:bg-purple-700 text-white">
+                Go back to setup
+              </Button>
+            </Link>
+          </div>
+        ) : (
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Listing Preview */}
           <div>
-            <Card className="overflow-hidden">
-              <div className="relative">
+            <Card className="overflow-hidden">              <div className="relative">
                 <Image
-                  src="/placeholder.svg?height=250&width=400"
+                  src={setupData?.photos && setupData.photos.length > 0 ? setupData.photos[0] : "/placeholder.svg?height=250&width=400"}
                   alt="Your listing"
                   width={400}
                   height={250}
@@ -98,10 +141,14 @@ export default function PublishListingPage() {
                 <div className="absolute top-3 left-3 bg-purple-600 text-white px-2 py-1 rounded text-sm font-medium">
                   NEW
                 </div>
-              </div>
-              <CardContent className="p-6">
+                {setupData?.photos && setupData.photos.length > 1 && (
+                  <div className="absolute bottom-3 right-3 bg-black/50 text-white px-2 py-1 rounded text-sm">
+                    +{setupData.photos.length - 1} more
+                  </div>
+                )}
+              </div><CardContent className="p-6">
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-lg font-semibold">Cozy Mountain View Apartment</h3>
+                  <h3 className="text-lg font-semibold">{setupData?.title || "Cozy Mountain View Apartment"}</h3>
                   <div className="flex items-center">
                     <Star className="w-4 h-4 text-yellow-400 fill-current" />
                     <span className="text-sm text-gray-600 ml-1">New</span>
@@ -112,11 +159,38 @@ export default function PublishListingPage() {
                   <Users className="w-4 h-4 mr-1" />
                   <span className="text-sm">2 guests • 1 bedroom • 1 bed • 1 bathroom</span>
                 </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-2xl font-bold">NPR 3,500</span>
-                    <span className="text-gray-600 ml-1">/ night</span>
+                
+                {/* Pricing Breakdown */}
+                <div className="bg-gray-50 p-4 rounded-lg mb-4">
+                  <h4 className="font-medium mb-3">Price breakdown</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span>Base price per night</span>
+                      <span>NPR {setupData?.pricing?.basePrice ? Number(setupData.pricing.basePrice).toLocaleString() : "0"}</span>
+                    </div>
+                    {setupData?.pricing?.cleaningFee && Number(setupData.pricing.cleaningFee) > 0 && (
+                      <div className="flex justify-between">
+                        <span>Cleaning fee</span>
+                        <span>NPR {Number(setupData.pricing.cleaningFee).toLocaleString()}</span>
+                      </div>
+                    )}
+                    {setupData?.pricing?.securityDeposit && Number(setupData.pricing.securityDeposit) > 0 && (
+                      <div className="flex justify-between text-gray-500">
+                        <span>Security deposit (refundable)</span>
+                        <span>NPR {Number(setupData.pricing.securityDeposit).toLocaleString()}</span>
+                      </div>
+                    )}
+                    <div className="border-t pt-2 mt-2">
+                      <div className="flex justify-between font-semibold text-lg">
+                        <span>Total per night</span>
+                        <span>NPR {calculateTotalPrice().toLocaleString()}</span>
+                      </div>
+                    </div>
                   </div>
+                </div>
+                
+                <div className="text-sm text-gray-500">
+                  <p>{setupData?.description || "A beautiful place to stay with amazing amenities."}</p>
                 </div>
               </CardContent>
             </Card>
@@ -188,9 +262,9 @@ export default function PublishListingPage() {
               <Link href="/host-guarantee" className="text-purple-600 hover:underline">
                 Host Guarantee
               </Link>
-            </p>
-          </div>
+            </p>          </div>
         </div>
+        )}
       </div>
     </div>
   )
