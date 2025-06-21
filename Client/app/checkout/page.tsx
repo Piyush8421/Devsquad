@@ -93,11 +93,16 @@ export default function CheckoutPage() {
 
       // Step 2: Simulate payment processing
       await new Promise(resolve => setTimeout(resolve, 2000))
-      
-      // Step 3: Confirm payment
+        // Step 3: Confirm payment
       const confirmData = {
         paymentIntentId: intentResponse.data.paymentIntent.id,
-        paymentProvider: paymentMethod === 'card' ? 'stripe' : paymentMethod
+        paymentProvider: paymentMethod === 'card' ? 'stripe' : paymentMethod,
+        // Include booking data for payment confirmation
+        propertyId: paymentData.propertyId,
+        checkIn: paymentData.checkIn,
+        checkOut: paymentData.checkOut,
+        guests: paymentData.guests,
+        totalAmount: paymentData.totalPrice
       }
 
       const confirmResponse = await paymentsAPI.confirmPayment(confirmData)
