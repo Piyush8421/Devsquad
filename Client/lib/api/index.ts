@@ -267,3 +267,42 @@ export const userAPI = {
     body: JSON.stringify(profileData),
   }),
 };
+
+// Payments API
+export const paymentsAPI = {
+  createIntent: (paymentData: {
+    propertyId: number;
+    checkIn: string;
+    checkOut: string;
+    guests: number;
+    totalAmount: number;
+    currency?: string;
+    paymentMethod: string;
+    notes?: string;
+  }) => apiRequest('/payments/create-intent', {
+    method: 'POST',
+    body: JSON.stringify(paymentData),
+  }),
+
+  confirmPayment: (confirmData: {
+    paymentIntentId: string;
+    paymentMethodId?: string;
+    paymentProvider: string;
+  }) => apiRequest('/payments/confirm', {
+    method: 'POST',
+    body: JSON.stringify(confirmData),
+  }),
+
+  getHistory: (filters?: { page?: number; limit?: number }) => {
+    const queryString = filters ? new URLSearchParams(
+      Object.entries(filters).reduce((acc, [key, value]) => {
+        if (value !== undefined && value !== null) {
+          acc[key] = value.toString();
+        }
+        return acc;
+      }, {} as Record<string, string>)
+    ).toString() : '';
+    
+    return apiRequest(`/payments/history${queryString ? `?${queryString}` : ''}`);
+  },
+};

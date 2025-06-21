@@ -12,6 +12,7 @@ const propertyRoutes = require('./routes/properties');
 const userRoutes = require('./routes/users');
 const bookingRoutes = require('./routes/bookings');
 const reviewRoutes = require('./routes/reviews');
+const paymentRoutes = require('./routes/payments');
 const companyRoutes = require('./routes/company');
 const careerRoutes = require('./routes/careers');
 const referralRoutes = require('./routes/referrals');
@@ -62,10 +63,10 @@ app.get('/', (req, res) => {
     endpoints: {
       health: '/health',
       auth: '/api/auth',
-      properties: '/api/properties',
-      users: '/api/users',
+      properties: '/api/properties',      users: '/api/users',
       bookings: '/api/bookings',
       reviews: '/api/reviews',
+      payments: '/api/payments',
       company: '/api/company',
       careers: '/api/careers',
       referrals: '/api/referrals',
@@ -80,6 +81,7 @@ app.use('/api/properties', propertyRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/reviews', reviewRoutes);
+app.use('/api/payments', paymentRoutes);
 app.use('/api/company', companyRoutes);
 app.use('/api/careers', careerRoutes);
 app.use('/api/referrals', referralRoutes);
