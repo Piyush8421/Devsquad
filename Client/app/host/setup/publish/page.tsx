@@ -70,8 +70,7 @@ export default function PublishListingPage() {
           <div className="space-y-4 mb-8">
             <Link href="/host/dashboard">
               <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3">Go to Host Dashboard</Button>
-            </Link>
-            <Link href="/host/listing/preview">
+            </Link>            <Link href="/host/listing/preview">
               <Button variant="outline" className="w-full py-3">
                 Preview Your Listing
               </Button>

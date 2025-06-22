@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
 // Helper function to get auth token from localStorage (client-side only)
 const getAuthToken = () => {
@@ -45,19 +45,18 @@ export const authAPI = {
     email: string;
     password: string;
     phone?: string;
-    role?: 'guest' | 'host';
-  }) => apiRequest('/auth/register', {
+    role?: 'guest' | 'host';  }) => apiRequest('/api/auth/register', {
     method: 'POST',
     body: JSON.stringify(userData),
   }),
 
   login: (credentials: { email: string; password: string }) =>
-    apiRequest('/auth/login', {
+    apiRequest('/api/auth/login', {
       method: 'POST',
       body: JSON.stringify(credentials),
     }),
 
-  getProfile: () => apiRequest('/auth/profile'),
+  getProfile: () => apiRequest('/api/auth/profile'),
 };
 
 // Properties API
@@ -80,26 +79,25 @@ export const propertiesAPI = {
         return acc;
       }, {} as Record<string, string>)
     ).toString() : '';
-    
-    return apiRequest(`/properties${queryString ? `?${queryString}` : ''}`);
+      return apiRequest(`/api/properties${queryString ? `?${queryString}` : ''}`);
   },
 
-  getById: (id: string | number) => apiRequest(`/properties/${id}`),
+  getById: (id: string | number) => apiRequest(`/api/properties/${id}`),
 
   create: (propertyData: any) =>
-    apiRequest('/properties', {
+    apiRequest('/api/properties', {
       method: 'POST',
       body: JSON.stringify(propertyData),
     }),
 
   update: (id: string | number, propertyData: any) =>
-    apiRequest(`/properties/${id}`, {
+    apiRequest(`/api/properties/${id}`, {
       method: 'PUT',
       body: JSON.stringify(propertyData),
     }),
 
   delete: (id: string | number) =>
-    apiRequest(`/properties/${id}`, {
+    apiRequest(`/api/properties/${id}`, {
       method: 'DELETE',
     }),
 };
@@ -112,8 +110,7 @@ export const bookingsAPI = {
     checkOut: string;
     guests: number;
     totalPrice: number;
-    notes?: string;
-  }) => apiRequest('/bookings', {
+    notes?: string;  }) => apiRequest('/api/bookings', {
     method: 'POST',
     body: JSON.stringify(bookingData),
   }),
@@ -128,13 +125,13 @@ export const bookingsAPI = {
       }, {} as Record<string, string>)
     ).toString() : '';
     
-    return apiRequest(`/bookings${queryString ? `?${queryString}` : ''}`);
+    return apiRequest(`/api/bookings${queryString ? `?${queryString}` : ''}`);
   },
 
-  getById: (id: string | number) => apiRequest(`/bookings/${id}`),
+  getById: (id: string | number) => apiRequest(`/api/bookings/${id}`),
 
   cancel: (id: string | number) =>
-    apiRequest(`/bookings/${id}/cancel`, {
+    apiRequest(`/api/bookings/${id}/cancel`, {
       method: 'PUT',
     }),
 };
@@ -144,34 +141,32 @@ export const reviewsAPI = {
   create: (reviewData: {
     propertyId: number;
     rating: number;
-    comment: string;
-  }) => apiRequest('/reviews', {
+    comment: string;  }) => apiRequest('/api/reviews', {
     method: 'POST',
     body: JSON.stringify(reviewData),
   }),
 
-  getByProperty: (propertyId: string | number, page?: number) =>
-    apiRequest(`/reviews/property/${propertyId}${page ? `?page=${page}` : ''}`),
+  getByProperty: (propertyId: string | number, page?: number) =>    apiRequest(`/api/reviews/property/${propertyId}${page ? `?page=${page}` : ''}`),
 
   getUserReviews: (page?: number) =>
-    apiRequest(`/reviews/user${page ? `?page=${page}` : ''}`),
+    apiRequest(`/api/reviews/user${page ? `?page=${page}` : ''}`),
 
   update: (id: string | number, reviewData: { rating: number; comment: string }) =>
-    apiRequest(`/reviews/${id}`, {
+    apiRequest(`/api/reviews/${id}`, {
       method: 'PUT',
       body: JSON.stringify(reviewData),
     }),
 
   delete: (id: string | number) =>
-    apiRequest(`/reviews/${id}`, {
+    apiRequest(`/api/reviews/${id}`, {
       method: 'DELETE',
     }),
 };
 
 // Company API
 export const companyAPI = {
-  getInfo: () => apiRequest('/company'),
-  getAbout: () => apiRequest('/company/about'),
+  getInfo: () => apiRequest('/api/company'),
+  getAbout: () => apiRequest('/api/company/about'),
 };
 
 // Careers API
@@ -185,11 +180,10 @@ export const careersAPI = {
         return acc;
       }, {} as Record<string, string>)
     ).toString() : '';
-    
-    return apiRequest(`/careers${queryString ? `?${queryString}` : ''}`);
+      return apiRequest(`/api/careers${queryString ? `?${queryString}` : ''}`);
   },
 
-  getJobById: (id: string | number) => apiRequest(`/careers/${id}`),
+  getJobById: (id: string | number) => apiRequest(`/api/careers/${id}`),
 
   apply: (applicationData: {
     jobId: number;
@@ -201,7 +195,7 @@ export const careersAPI = {
     resumeUrl: string;
     linkedinUrl?: string;
     portfolioUrl?: string;
-  }) => apiRequest('/careers/apply', {
+  }) => apiRequest('/api/careers/apply', {
     method: 'POST',
     body: JSON.stringify(applicationData),
   }),
@@ -209,13 +203,13 @@ export const careersAPI = {
 
 // Referrals API
 export const referralsAPI = {
-  getInfo: () => apiRequest('/referrals/info'),
-  getMyCode: () => apiRequest('/referrals/my-code'),
+  getInfo: () => apiRequest('/api/referrals/info'),
+  getMyCode: () => apiRequest('/api/referrals/my-code'),
   sendReferral: (referralData: {
     refereeEmail: string;
     refereeName: string;
     message?: string;
-  }) => apiRequest('/referrals/send', {
+  }) => apiRequest('/api/referrals/send', {
     method: 'POST',
     body: JSON.stringify(referralData),
   }),
@@ -223,9 +217,9 @@ export const referralsAPI = {
     const params = new URLSearchParams();
     if (page) params.append('page', page.toString());
     if (status) params.append('status', status);
-    return apiRequest(`/referrals/my-referrals${params.toString() ? `?${params.toString()}` : ''}`);
+    return apiRequest(`/api/referrals/my-referrals${params.toString() ? `?${params.toString()}` : ''}`);
   },
-  validateCode: (referralCode: string) => apiRequest('/referrals/validate', {
+  validateCode: (referralCode: string) => apiRequest('/api/referrals/validate', {
     method: 'POST',
     body: JSON.stringify({ referralCode }),
   }),
@@ -233,7 +227,7 @@ export const referralsAPI = {
 
 // Safety API
 export const safetyAPI = {
-  getGuidelines: () => apiRequest('/safety/guidelines'),
+  getGuidelines: () => apiRequest('/api/safety/guidelines'),
   reportIssue: (reportData: {
     type: 'safety_concern' | 'inappropriate_behavior' | 'property_issue' | 'other';
     propertyId?: number;
@@ -242,7 +236,7 @@ export const safetyAPI = {
     description: string;
     priority?: 'low' | 'medium' | 'high' | 'urgent';
     evidence?: string[];
-  }) => apiRequest('/safety/report', {
+  }) => apiRequest('/api/safety/report', {
     method: 'POST',
     body: JSON.stringify(reportData),
   }),
@@ -250,19 +244,19 @@ export const safetyAPI = {
     const params = new URLSearchParams();
     if (page) params.append('page', page.toString());
     if (status) params.append('status', status);
-    return apiRequest(`/safety/my-reports${params.toString() ? `?${params.toString()}` : ''}`);
+    return apiRequest(`/api/safety/my-reports${params.toString() ? `?${params.toString()}` : ''}`);
   },
-  getReport: (caseNumber: string) => apiRequest(`/safety/report/${caseNumber}`),
+  getReport: (caseNumber: string) => apiRequest(`/api/safety/report/${caseNumber}`),
 };
 
 // User API
 export const userAPI = {
-  getProfile: () => apiRequest('/users/profile'),
+  getProfile: () => apiRequest('/api/users/profile'),
   updateProfile: (profileData: {
     firstName: string;
     lastName: string;
     phone?: string;
-  }) => apiRequest('/users/profile', {
+  }) => apiRequest('/api/users/profile', {
     method: 'PUT',
     body: JSON.stringify(profileData),
   }),
@@ -279,7 +273,7 @@ export const paymentsAPI = {
     currency?: string;
     paymentMethod: string;
     notes?: string;
-  }) => apiRequest('/payments/create-intent', {
+  }) => apiRequest('/api/payments/create-intent', {
     method: 'POST',
     body: JSON.stringify(paymentData),
   }),
@@ -288,7 +282,7 @@ export const paymentsAPI = {
     paymentIntentId: string;
     paymentMethodId?: string;
     paymentProvider: string;
-  }) => apiRequest('/payments/confirm', {
+  }) => apiRequest('/api/payments/confirm', {
     method: 'POST',
     body: JSON.stringify(confirmData),
   }),
@@ -303,6 +297,6 @@ export const paymentsAPI = {
       }, {} as Record<string, string>)
     ).toString() : '';
     
-    return apiRequest(`/payments/history${queryString ? `?${queryString}` : ''}`);
+    return apiRequest(`/api/payments/history${queryString ? `?${queryString}` : ''}`);
   },
 };
